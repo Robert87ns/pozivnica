@@ -2,29 +2,72 @@
 <html lang="sr" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Позивница - Милош, Јована и Душан</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts with full Cyrillic support -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Instant Image Preloader to eliminate any load lagging -->
+    <script>
+        const preloadedImage = new Image();
+        preloadedImage.src = "1000015399.jpg";
+    </script>
+
     <style>
         .font-cursive-cyrillic { font-family: 'Marck Script', cursive; }
-        .envelope-container { perspective: 1500px; }
-        .envelope-flap { transform-origin: top center; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); z-index: 30; }
+        .envelope-container { perspective: 1500px; will-change: transform; }
+        
+        .envelope-flap { 
+            transform-origin: top center; 
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            z-index: 30; 
+            will-change: transform;
+        }
         .envelope-flap.open { transform: rotateX(180deg); z-index: 10; }
-        @keyframes pulseGold { 0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.5); } 50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); } }
+        
+        @keyframes pulseGold { 
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.5); } 
+            50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); } 
+        }
         .seal-pulse { animation: pulseGold 2.5s infinite; }
-        @keyframes floatSlow { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        
+        @keyframes floatSlow { 
+            0%, 100% { transform: translateY(0px); } 
+            50% { transform: translateY(-8px); } 
+        }
         .animate-float { animation: floatSlow 5s ease-in-out infinite; }
+        
         img { -webkit-user-drag: none; user-select: none; }
+
+        /* Highly Optimized "Carpet Roll" Unrolling Animation */
+        .carpet-roll {
+            transform: perspective(1200px) rotateX(-18deg) scale(0.85) translateY(-60px);
+            transform-origin: top center;
+            clip-path: inset(0 0 100% 0);
+            opacity: 0;
+            transition: clip-path 1.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: clip-path, transform, opacity;
+        }
+        
+        .carpet-roll.unrolled {
+            clip-path: inset(0 0 0% 0);
+            transform: perspective(1200px) rotateX(0deg) scale(1) translateY(0);
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-[#a2b29f] h-full overflow-hidden select-none relative flex items-center justify-center font-sans">
 
-    <canvas id="gold-dust-canvas" class="absolute inset-0 z-10 opacity-60"></canvas>
+    <!-- Gold Dust Ambient Canvas background -->
+    <canvas id="gold-dust-canvas" class="absolute inset-0 z-10 opacity-60 pointer-events-none"></canvas>
 
     <!-- Background Music Toggle Floating Button -->
     <button id="music-toggle-btn" class="fixed bottom-6 right-6 z-50 bg-white/95 backdrop-blur-md p-3.5 rounded-full shadow-lg border border-yellow-600/20 text-yellow-600 hover:text-yellow-700 hover:scale-110 transition-all duration-300 hidden">
@@ -56,9 +99,9 @@
                 </svg>
             </div>
 
-            <!-- TEASER PEEK WITH JPG IMAGE AND TEXT FALLBACK -->
+            <!-- TEASER PEEK WITH JPG IMAGE -->
             <div id="envelope-card-peek" class="absolute top-4 left-4 right-4 h-[200px] bg-[#FAF8F5] rounded-t-md shadow-md border-t-2 border-x border-yellow-600/10 overflow-hidden z-10 transform translate-y-2 transition-transform duration-1000">
-                <img src="1000015399.jpg" alt="Peek" class="w-full h-full object-cover object-top opacity-90 absolute inset-0 z-0" onerror="this.style.display='none'">
+                <img src="1000015399.jpg" alt="Peek" class="w-full h-full object-cover object-top opacity-95 absolute inset-0 z-0" onerror="this.style.display='none'">
                 <div class="absolute inset-0 flex flex-col items-center justify-center p-4 bg-[#FAF8F5]/85 text-center z-10">
                     <p class="font-cursive-cyrillic text-2xl text-yellow-700/85">Милош, Јована<br>и Душан</p>
                     <div class="h-[1px] w-12 bg-yellow-600/20 my-2"></div>
@@ -101,100 +144,19 @@
     <!-- ============================================ -->
     <!-- SECTION 2: THE MAIN INVITATION IMAGE CARD   -->
     <!-- ============================================ -->
-    <main id="invitation-main" class="relative z-20 w-full max-w-lg px-4 flex flex-col items-center justify-center opacity-0 transform translate-y-24 transition-all duration-1000 hidden">
+    <main id="invitation-main" class="relative z-20 w-full max-w-lg px-4 flex flex-col items-center justify-center opacity-0 hidden">
         <div class="w-full flex flex-col items-center justify-center">
             
-            <!-- Beautiful physical frame containing your uploaded JPG -->
-            <div class="relative bg-[#FAF8F5] shadow-2xl rounded-sm p-1.5 border border-[#e5dec9] overflow-hidden flex items-center justify-center">
-                <img id="invitation-image" src="1000015399.jpg" alt="Позивница" class="max-h-[74vh] md:max-h-[78vh] w-auto h-auto max-w-full object-contain rounded-sm" onerror="handleImageError(this)">
-            </div>
-            
-            <!-- Elegant RSVP Button positioned beautifully right beneath the card -->
-            <div class="mt-5 w-full flex justify-center">
-                <button onclick="openRSVPModal()" class="px-8 py-3 bg-white/95 hover:bg-[#FAF8F5] text-stone-800 border border-yellow-600/30 rounded-full shadow-md hover:shadow-lg hover:scale-[1.03] transition-all duration-300 flex items-center space-x-3 text-xs tracking-[0.2em] uppercase font-semibold">
-                    <i class="fa-regular fa-envelope-open text-yellow-600"></i>
-                    <span>Потврди долазак</span>
-                </button>
+            <!-- Beautiful physical frame containing your uploaded JPG with unrolling carpet effect -->
+            <div id="carpet-roll-container" class="carpet-roll relative bg-[#FAF8F5] shadow-2xl rounded-sm p-1.5 border border-[#e5dec9] overflow-hidden flex items-center justify-center">
+                <img id="invitation-image" src="1000015399.jpg" alt="Позивница" class="max-h-[82vh] md:max-h-[85vh] w-auto h-auto max-w-full object-contain rounded-sm" onerror="handleImageError(this)">
+                
+                <!-- Shimmer highlight effect mimicking paper curve reflection while unrolling -->
+                <div id="unroll-shine" class="absolute inset-0 bg-gradient-to-b from-white/0 via-white/20 to-black/10 pointer-events-none mix-blend-overlay transition-transform duration-[1.8s] ease-out" style="transform: translateY(-100%);"></div>
             </div>
             
         </div>
     </main>
-
-    <!-- ============================================ -->
-    <!-- SECTION 3: ELEGANT MODAL RSVP POPUP          -->
-    <!-- ============================================ -->
-    <div id="rsvp-modal" class="fixed inset-0 z-50 bg-[#889885]/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-500">
-        <div class="bg-[#FAF8F5] max-w-md w-full rounded-2xl border border-[#d4af37]/40 shadow-2xl p-6 sm:p-8 relative">
-            
-            <!-- Close button -->
-            <button onclick="closeRSVPModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700 transition">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-
-            <!-- Modal Heading -->
-            <div class="text-center mb-6">
-                <h3 class="font-cursive-cyrillic text-3xl text-stone-800">Потврда Доласка</h3>
-                <p class="text-[10px] uppercase tracking-widest text-stone-400 font-semibold mt-1">Молимо попуните формулар до 20. јула</p>
-                <div class="h-[1px] w-12 bg-[#d4af37]/40 mx-auto mt-3"></div>
-            </div>
-
-            <!-- RSVP Form (No Formspree Action - purely local JS mailto compilation) -->
-            <form id="rsvp-form" onsubmit="submitRSVP(event)" class="space-y-4 text-stone-700 text-sm">
-                <div>
-                    <label for="guest-name" class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-1">Име и презиме</label>
-                    <input type="text" id="guest-name" name="name" required class="w-full px-4 py-2.5 rounded-lg border border-stone-200 focus:ring-1 focus:ring-yellow-600 focus:border-yellow-600 outline-none transition bg-white" placeholder="нпр. Марко Марковић">
-                </div>
-
-                <div>
-                    <label for="guest-email" class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-1">Имејл адреса</label>
-                    <input type="email" id="guest-email" name="email" required class="w-full px-4 py-2.5 rounded-lg border border-stone-200 focus:ring-1 focus:ring-yellow-600 focus:border-yellow-600 outline-none transition bg-white" placeholder="нпр. marko@example.com">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">Да ли долазите?</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <label class="flex items-center justify-between p-3 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-50 transition">
-                            <span class="text-xs font-medium text-stone-700">Долазим са задовољством</span>
-                            <input type="radio" name="Долази" value="Да, долази" checked class="text-yellow-600 focus:ring-yellow-500">
-                        </label>
-                        <label class="flex items-center justify-between p-3 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-50 transition">
-                            <span class="text-xs font-medium text-stone-700">Нажалост не могу доћи</span>
-                            <input type="radio" name="Долази" value="Не, спречен/а је" class="text-yellow-600 focus:ring-yellow-500">
-                        </label>
-                    </div>
-                </div>
-
-                <div id="details-section">
-                    <label for="guest-count" class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-1">Број гостију</label>
-                    <select id="guest-count" name="guests" class="w-full px-4 py-2.5 rounded-lg border border-stone-200 focus:ring-1 focus:ring-yellow-600 outline-none transition bg-white">
-                        <option value="1 особа">1 особа</option>
-                        <option value="2 особе">2 особе</option>
-                        <option value="3 особе">3 особе</option>
-                        <option value="4 особе">4 особе</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="w-full py-3 bg-[#a2b29f] hover:bg-[#889885] text-white font-semibold text-xs tracking-wider uppercase rounded-lg shadow-md transition duration-200">
-                    Пошаљи одговор
-                </button>
-            </form>
-
-            <!-- Success State -->
-            <div id="rsvp-success" class="hidden text-center py-8 space-y-4">
-                <div class="w-12 h-12 bg-[#a2b29f]/10 text-[#a2b29f] rounded-full flex items-center justify-center mx-auto">
-                    <i class="fa-solid fa-check text-xl"></i>
-                </div>
-                <h4 class="font-cursive-cyrillic text-2xl text-stone-800">Хвала вам!</h4>
-                <p class="text-xs text-stone-500 leading-relaxed max-w-xs mx-auto">
-                    Ваш одговор је учитан у ваш имејл клијент за слање. Радујемо се заједничком слављу!
-                </p>
-                <button onclick="closeRSVPModal()" class="mt-4 text-xs font-semibold uppercase text-[#a2b29f] hover:underline">
-                    Затвори
-                </button>
-            </div>
-
-        </div>
-    </div>
 
     <!-- Music Banner Offer -->
     <div id="audio-consent" class="fixed bottom-6 left-6 z-50 max-w-xs bg-white/95 backdrop-blur-sm p-4 rounded-xl shadow-xl border border-yellow-600/10 transition-all duration-500 transform translate-y-10 opacity-0 pointer-events-none">
@@ -206,21 +168,60 @@
     </div>
 
     <script>
+        // High Performance Particle Background with mobile density check
         const canvas = document.getElementById('gold-dust-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const maxParticles = 30;
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        
+        // Auto-optimize particle density for smaller devices to prevent lags
+        const maxParticles = window.innerWidth < 768 ? 14 : 30;
+        let isTransitioning = false; // Flag to pause painting during the 3D paper animation
+
+        function resizeCanvas() { 
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight; 
+        }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
+
         class Particle {
             constructor() { this.reset(); }
-            reset() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 1.5 + 0.5; this.speedX = Math.random() * 0.2 - 0.1; this.speedY = Math.random() * 0.3 + 0.05; this.alpha = Math.random() * 0.4 + 0.1; this.alphaSpeed = Math.random() * 0.005 + 0.001; }
-            update() { this.x += this.speedX; this.y += this.speedY; this.alpha += this.alphaSpeed; if (this.alpha > 0.6 || this.alpha < 0.1) this.alphaSpeed = -this.alphaSpeed; if (this.y > canvas.height) { this.reset(); this.y = 0; } }
-            draw() { ctx.save(); ctx.globalAlpha = this.alpha; ctx.fillStyle = '#d4af37'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+            reset() { 
+                this.x = Math.random() * canvas.width; 
+                this.y = Math.random() * canvas.height; 
+                this.size = Math.random() * 1.5 + 0.5; 
+                this.speedX = Math.random() * 0.15 - 0.07; 
+                this.speedY = Math.random() * 0.25 + 0.05; 
+                this.alpha = Math.random() * 0.4 + 0.1; 
+                this.alphaSpeed = Math.random() * 0.005 + 0.001; 
+            }
+            update() { 
+                this.x += this.speedX; 
+                this.y += this.speedY; 
+                this.alpha += this.alphaSpeed; 
+                if (this.alpha > 0.6 || this.alpha < 0.1) this.alphaSpeed = -this.alphaSpeed; 
+                if (this.y > canvas.height) { this.reset(); this.y = 0; } 
+            }
+            draw() { 
+                ctx.save(); 
+                ctx.globalAlpha = this.alpha; 
+                ctx.fillStyle = '#d4af37'; 
+                ctx.beginPath(); 
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+                ctx.fill(); 
+                ctx.restore(); 
+            }
         }
         for (let i = 0; i < maxParticles; i++) particles.push(new Particle());
-        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+        
+        function animate() { 
+            // Bypass canvas draws during the 3D unrolling phase to prioritize silky-smooth CPU/GPU frames
+            if (!isTransitioning) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); 
+                particles.forEach(p => { p.update(); p.draw(); }); 
+            }
+            requestAnimationFrame(animate); 
+        }
         animate();
 
         const seal = document.getElementById('wax-seal');
@@ -228,16 +229,34 @@
         const peek = document.getElementById('envelope-card-peek');
         const envelopeScreen = document.getElementById('envelope-screen');
         const mainInvite = document.getElementById('invitation-main');
+        const carpetContainer = document.getElementById('carpet-roll-container');
+        const unrollShine = document.getElementById('unroll-shine');
 
         seal.addEventListener('click', () => {
             playOpeningChime();
+            isTransitioning = true; // Turn off particles temporarily
             seal.classList.add('opacity-0', 'pointer-events-none');
+            
             setTimeout(() => { flap.classList.add('open'); }, 300);
             setTimeout(() => { peek.style.transform = "translateY(-150px) scale(1.05)"; peek.style.opacity = "0"; }, 800);
+            
             setTimeout(() => {
                 envelopeScreen.classList.add('transition-all', 'duration-1000', 'opacity-0', 'pointer-events-none');
                 mainInvite.classList.remove('hidden');
-                setTimeout(() => { mainInvite.classList.remove('opacity-0', 'translate-y-24'); showMusicOffer(); }, 50);
+                
+                setTimeout(() => { 
+                    mainInvite.classList.remove('opacity-0'); 
+                    // Activate the gorgeous carpet unroll and light shine sweeping down
+                    carpetContainer.classList.add('unrolled');
+                    unrollShine.style.transform = "translateY(100%)";
+                    showMusicOffer(); 
+                }, 50);
+
+                // Resume ambient particle dust gracefully after unrolling completes
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 1800);
+
             }, 1800);
         });
 
@@ -257,6 +276,7 @@
         function dismissMusicConsent() { const consent = document.getElementById('audio-consent'); consent.classList.remove('opacity-100', 'translate-y-0'); consent.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10'); }
         const toggleBtn = document.getElementById('music-toggle-btn');
         toggleBtn.addEventListener('click', () => { if (isMusicPlaying) { stopMusicSynth(); } else { startMusicSynth(); } });
+        
         function startMusicSynth() {
             if (isMusicPlaying) return;
             try {
@@ -265,7 +285,7 @@
                 function playMelody() {
                     if (!isMusicPlaying || !audioCtx) return; const now = audioCtx.currentTime; const chord = chords[chordIndex];
                     chord.forEach((freq, noteIdx) => {
-                        const noteDelay = noteIdx * 0.25; const osc = audioCtx.createOscillator(); const gain = actx.createGain(); const lowpass = audioCtx.createBiquadFilter(); osc.type = 'triangle'; osc.frequency.setValueAtTime(freq, now + noteDelay); lowpass.type = 'lowpass'; lowpass.frequency.setValueAtTime(800, now + noteDelay); gain.gain.setValueAtTime(0, now + noteDelay); gain.gain.linearRampToValueAtTime(0.04, now + noteDelay + 0.3); gain.gain.exponentialRampToValueAtTime(0.001, now + noteDelay + 2.5); osc.connect(lowpass); lowpass.connect(gain); gain.connect(audioCtx.destination); osc.start(now + noteDelay); osc.stop(now + noteDelay + 3.0);
+                        const noteDelay = noteIdx * 0.25; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); const lowpass = audioCtx.createBiquadFilter(); osc.type = 'triangle'; osc.frequency.setValueAtTime(freq, now + noteDelay); lowpass.type = 'lowpass'; lowpass.frequency.setValueAtTime(800, now + noteDelay); gain.gain.setValueAtTime(0, now + noteDelay); gain.gain.linearRampToValueAtTime(0.04, now + noteDelay + 0.3); gain.gain.exponentialRampToValueAtTime(0.001, now + noteDelay + 2.5); osc.connect(lowpass); lowpass.connect(gain); gain.connect(audioCtx.destination); osc.start(now + noteDelay); osc.stop(now + noteDelay + 3.0);
                     });
                     chordIndex = (chordIndex + 1) % chords.length;
                 }
@@ -273,53 +293,6 @@
             } catch(e) {}
         }
         function stopMusicSynth() { isMusicPlaying = false; if (melodyTimer) clearInterval(melodyTimer); if (audioCtx) { audioCtx.close(); audioCtx = null; } document.getElementById('music-wave').classList.add('hidden'); document.getElementById('music-icon').classList.remove('text-yellow-600'); }
-
-        const modal = document.getElementById('rsvp-modal');
-        const attendingRadios = document.querySelectorAll('input[name="Долази"]');
-        const detailsSection = document.getElementById('details-section');
-
-        function openRSVPModal() { modal.classList.remove('opacity-0', 'pointer-events-none'); modal.classList.add('opacity-100', 'pointer-events-auto'); }
-        function closeRSVPModal() {
-            modal.classList.remove('opacity-100', 'pointer-events-auto'); modal.classList.add('opacity-0', 'pointer-events-none');
-            setTimeout(() => { document.getElementById('rsvp-form').classList.remove('hidden'); document.getElementById('rsvp-success').classList.add('hidden'); document.getElementById('rsvp-form').reset(); detailsSection.style.opacity = '1'; detailsSection.style.pointerEvents = 'auto'; }, 400);
-        }
-
-        attendingRadios.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                if (e.target.value.includes('Не')) { detailsSection.style.opacity = '0.2'; detailsSection.style.pointerEvents = 'none'; } else { detailsSection.style.opacity = '1'; detailsSection.style.pointerEvents = 'auto'; }
-            });
-        });
-
-        // Direct mailto compilation and browser intent dispatch
-        function submitRSVP(e) {
-            e.preventDefault();
-            const form = document.getElementById('rsvp-form');
-            const name = document.getElementById('guest-name').value;
-            const email = document.getElementById('guest-email').value;
-            const attending = document.querySelector('input[name="Долази"]:checked').value;
-            const count = document.getElementById('guest-count').value;
-
-            // Constructing subject & body
-            const subject = encodeURIComponent("Потврда доласка: " + name);
-            let bodyText = `Име и презиме: ${name}\n`;
-            bodyText += `Имејл адреса: ${email}\n`;
-            bodyText += `Одговор: ${attending}\n`;
-            
-            if (!attending.includes('Не')) {
-                bodyText += `Број гостију: ${count}\n`;
-            }
-
-            const body = encodeURIComponent(bodyText);
-            const mailtoLink = `mailto:jovanamicovic9@gmail.com?subject=${subject}&body=${body}`;
-
-            // Redirecting user to their local email client
-            window.location.href = mailtoLink;
-
-            // Instantly transition the form UI on-screen to success modal
-            form.classList.add('hidden');
-            document.getElementById('rsvp-success').classList.remove('hidden');
-            form.reset();
-        }
 
         function handleImageError(img) { 
             img.parentElement.innerHTML = `
